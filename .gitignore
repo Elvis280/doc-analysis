@@ -1,0 +1,73 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Virtual environments
+venv/
+env/
+.venv/
+venv*/
+ENV/
+env.bak/
+
+# Pipenv / Poetry
+Pipfile.lock
+poetry.lock
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.*
+
+# Data and vector stores (large/generated files)
+faiss_store/
+data/
+
+# Logs and runtime files
+*.log
+*.pid
+*.seed
+
+# Jupyter
+.ipynb_checkpoints
+
+# OS files
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Type check / caches
+.mypy_cache/
+.pyre/
+
+# Misc
+*.egg
+*.whl
