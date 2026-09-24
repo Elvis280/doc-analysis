@@ -38,7 +38,7 @@ class KnowledgeUnit(BaseModel):
 class Manifest(BaseModel):
     source_pdf: str
     kb_name: str
-    generator: str = "RAG Knowledge Base Generator MVP"
+    generator: str = "KnowForge MVP"
     version: str = "1.0.0"
     num_units: int
     format: str = "Markdown + JSON"

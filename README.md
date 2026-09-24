@@ -1,4 +1,4 @@
-# RAG Knowledge Base Generator
+# KnowForge
 
 A full-stack, highly optimized asynchronous tool for extracting structured knowledge units from PDF documents. This generator is perfect for building high-quality, dense context sources for Retrieval-Augmented Generation (RAG) pipelines.
 
