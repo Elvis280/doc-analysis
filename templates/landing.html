@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Turn PDFs into structured, metadata-rich knowledge bases ready for your RAG pipeline. Upload a document, get a ZIP with Markdown, JSON metadata, and a manifest.">
+    <title>RAG KB Generator — From PDF to Structured Knowledge</title>
+    <link rel="stylesheet" href="/static/landing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ─── NAVBAR ──────────────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-icon">⚡</span>
+                <span class="nav-logo-text">RAG <span class="accent">KB</span> Generator</span>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#why" class="nav-link">Why This Exists</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#faq" class="nav-link">FAQs</a>
+            </div>
+            <a href="/app" class="nav-cta">Get Started <span class="arrow">→</span></a>
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ─── HERO ────────────────────────────────────────────────────────── -->
+    <section class="hero" id="home">
+        <div class="hero-grid">
+            <div class="hero-text">
+                <div class="hero-eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    PDF → RAG-Ready Knowledge Base
+                </div>
+                <h1 class="hero-title">
+                    From PDF to<br>
+                    <span class="gradient-text">structured knowledge</span><br>
+                    for your RAG apps.
+                </h1>
+                <p class="hero-subtitle">
+                    Upload a PDF and get a clean, metadata-rich knowledge base with
+                    context, relationships, and keywords — ready to plug into your
+                    RAG pipeline.
+                </p>
+                <div class="hero-actions">
+                    <a href="/app" class="btn btn-primary">Get Started <span class="arrow">→</span></a>
+                    <a href="#output-preview" class="btn btn-ghost">See Example Output <span class="arrow">→</span></a>
+                </div>
+                <div class="hero-meta">
+                    <span class="meta-item"><span class="meta-dot"></span> No signup required</span>
+                    <span class="meta-item"><span class="meta-dot"></span> PDF only (max 8 pages)</span>
+                    <span class="meta-item"><span class="meta-dot"></span> Download as ZIP</span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="visual-card">
+                    <!-- Input side -->
+                    <div class="visual-input">
+                        <div class="file-icon-wrap">
+                            <svg class="file-svg" viewBox="0 0 40 48" fill="none">
+                                <path d="M0 4C0 1.79 1.79 0 4 0H24L40 16V44C40 46.21 38.21 48 36 48H4C1.79 48 0 46.21 0 44V4Z" fill="#fef0e7"/>
+                                <path d="M24 0L40 16H28C25.79 16 24 14.21 24 12V0Z" fill="#e8642c" opacity="0.4"/>
+                                <text x="20" y="34" text-anchor="middle" fill="#e8642c" font-family="JetBrains Mono" font-size="10" font-weight="600">PDF</text>
+                            </svg>
+                        </div>
+                        <div class="file-info">
+                            <span class="file-name">research_paper.pdf</span>
+                            <span class="file-meta">8 pages • 2.4 MB</span>
+                        </div>
+                    </div>
+
+                    <!-- Processing arrow -->
+                    <div class="visual-process">
+                        <div class="process-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            AI Processing
+                        </div>
+                        <div class="process-line"></div>
+                    </div>
+
+                    <!-- Output side: file tree -->
+                    <div class="visual-output">
+                        <div class="tree-header">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e8642c" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20"/></svg>
+                            <span class="tree-title">knowledge_base.zip</span>
+                        </div>
+                        <div class="tree-body">
+                            <div class="tree-item folder"><span class="tree-indent"></span><span class="folder-icon">📂</span> knowledge/</div>
+                            <div class="tree-item file"><span class="tree-indent deep"></span><span class="file-icon-sm">📄</span> transformer-architecture.md</div>
+                            <div class="tree-item file"><span class="tree-indent deep"></span><span class="file-icon-sm">📄</span> attention-mechanism.md</div>
+                            <div class="tree-item file"><span class="tree-indent deep"></span><span class="file-icon-sm">📄</span> training-procedure.md</div>
+                            <div class="tree-item folder"><span class="tree-indent"></span><span class="folder-icon">📂</span> metadata/</div>
+                            <div class="tree-item file"><span class="tree-indent deep"></span><span class="file-icon-sm">📋</span> transformer-architecture.json</div>
+                            <div class="tree-item file"><span class="tree-indent deep"></span><span class="file-icon-sm">📋</span> attention-mechanism.json</div>
+                            <div class="tree-item file special"><span class="tree-indent"></span><span class="file-icon-sm">📋</span> manifest.json</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── WHY THIS IS NEEDED ───────────────────────────────────────── -->
+    <section class="section section-warm" id="why">
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-eyebrow">The Problem</span>
+                <h2 class="section-title">Why This Is Needed</h2>
+                <p class="section-subtitle">Building RAG pipelines is hard enough. Preparing your data shouldn't be the bottleneck.</p>
+            </div>
+            <div class="pain-grid">
+                <div class="pain-card">
+                    <span class="pain-number">01</span>
+                    <div class="pain-icon red">🔴</div>
+                    <h3 class="pain-title">Dumb Chunking Kills Retrieval</h3>
+                    <p class="pain-desc">Most RAG pipelines split documents by arbitrary token counts. This breaks sentences mid-thought, mixes topics in a single chunk, and destroys semantic meaning — leading to irrelevant retrieval results.</p>
+                </div>
+                <div class="pain-card">
+                    <span class="pain-number">02</span>
+                    <div class="pain-icon amber">🟡</div>
+                    <h3 class="pain-title">No Metadata, No Context</h3>
+                    <p class="pain-desc">Raw text chunks lack context. Without knowing which document, section, or page a chunk came from, your LLM can't cite sources, can't filter by topic, and can't reason about relationships between concepts.</p>
+                </div>
+                <div class="pain-card">
+                    <span class="pain-number">03</span>
+                    <div class="pain-icon gray">⚙️</div>
+                    <h3 class="pain-title">Manual Prep Is Tedious</h3>
+                    <p class="pain-desc">Building a structured knowledge base by hand means reading every page, tagging each concept, mapping relationships, and formatting output — hours of work that could be automated.</p>
+                </div>
+            </div>
+            <div class="solution-banner">
+                <span class="solution-icon">💡</span>
+                <span class="solution-text">RAG KB Generator solves all three — automatically, in under a minute.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── FEATURES ──────────────────────────────────────────────────── -->
+    <section class="section" id="features">
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-eyebrow">Built For Developers</span>
+                <h2 class="section-title">Features</h2>
+                <p class="section-subtitle">Everything you need to go from unstructured PDFs to production-ready knowledge bases.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Structuring</h3>
+                    <p class="feature-desc">Converts unstructured PDF content into semantically meaningful knowledge units using LLMs — not dumb token splitting.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    </div>
+                    <h3 class="feature-title">Rich Metadata</h3>
+                    <p class="feature-desc">Every unit includes its source document, section, page numbers, type classification, and keyword tags.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6"/><path d="M9 18h6"/></svg>
+                    </div>
+                    <h3 class="feature-title">Knowledge Relationships</h3>
+                    <p class="feature-desc">Units are linked via typed relationships — part_of, depends_on, related_to, contrasts_with — enabling graph-aware retrieval.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <h3 class="feature-title">Portable ZIP Output</h3>
+                    <p class="feature-desc">Download everything in a single ZIP: Markdown knowledge files, JSON metadata, and a manifest.json for easy indexing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <h3 class="feature-title">Zero Data Retention</h3>
+                    <p class="feature-desc">Your PDF is deleted the moment processing completes. The ZIP is deleted right after you download. Nothing is stored on the server.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
+                    <h3 class="feature-title">Blazing Fast on Groq</h3>
+                    <p class="feature-desc">Powered by Groq's ultra-low-latency inference. Process an 8-page PDF in well under a minute.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── OUTPUT PREVIEW ────────────────────────────────────────────── -->
+    <section class="section section-warm" id="output-preview">
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-eyebrow">See What You Get</span>
+                <h2 class="section-title">Example Output</h2>
+                <p class="section-subtitle">Here's what a typical knowledge unit looks like inside the generated ZIP.</p>
+            </div>
+            <div class="code-preview-grid">
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span class="cdot r"></span><span class="cdot y"></span><span class="cdot g"></span></div>
+                        <span class="code-filename">knowledge/attention-mechanism.md</span>
+                    </div>
+                    <pre class="code-body"><code><span class="hl-heading"># Attention Mechanism</span>
+
+<span class="hl-meta">**Type:** concept</span>
+<span class="hl-meta">**Section:** Chapter 3 — Transformer Architecture</span>
+<span class="hl-meta">**Keywords:** attention, self-attention, query, key, value</span>
+
+The attention mechanism computes a weighted sum of
+values based on the similarity between queries and
+keys. Given matrices Q, K, V:
+
+<span class="hl-code">  Attention(Q,K,V) = softmax(QK^T / √d_k) V</span>
+
+This allows the model to focus on relevant parts of
+the input sequence regardless of distance.
+
+<span class="hl-heading">## Relationships</span>
+<span class="hl-rel">- <b>part_of</b>: transformer-architecture</span>
+<span class="hl-rel">- <b>related_to</b>: multi-head-attention</span></code></pre>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span class="cdot r"></span><span class="cdot y"></span><span class="cdot g"></span></div>
+                        <span class="code-filename">metadata/attention-mechanism.json</span>
+                    </div>
+                    <pre class="code-body"><code><span class="hl-bracket">{</span>
+  <span class="hl-key">"id"</span>: <span class="hl-str">"attention-mechanism"</span>,
+  <span class="hl-key">"title"</span>: <span class="hl-str">"Attention Mechanism"</span>,
+  <span class="hl-key">"type"</span>: <span class="hl-str">"concept"</span>,
+  <span class="hl-key">"document"</span>: <span class="hl-str">"research_paper.pdf"</span>,
+  <span class="hl-key">"section"</span>: <span class="hl-str">"Chapter 3"</span>,
+  <span class="hl-key">"page_start"</span>: <span class="hl-num">5</span>,
+  <span class="hl-key">"page_end"</span>: <span class="hl-num">5</span>,
+  <span class="hl-key">"keywords"</span>: [<span class="hl-str">"attention"</span>, <span class="hl-str">"self-attention"</span>],
+  <span class="hl-key">"relationships"</span>: [
+    <span class="hl-bracket">{</span>
+      <span class="hl-key">"type"</span>: <span class="hl-str">"part_of"</span>,
+      <span class="hl-key">"target_id"</span>: <span class="hl-str">"transformer-architecture"</span>
+    <span class="hl-bracket">}</span>
+  ]
+<span class="hl-bracket">}</span></code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── FAQ ───────────────────────────────────────────────────────── -->
+    <section class="section" id="faq">
+        <div class="section-inner">
+            <div class="section-header">
+                <span class="section-eyebrow">Common Questions</span>
+                <h2 class="section-title">FAQs</h2>
+            </div>
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary class="faq-q">What types of PDFs work best?</summary>
+                    <p class="faq-a">Text-heavy documents like research papers, textbooks, documentation, and reports work best. Scanned images or heavily visual PDFs may produce limited results.</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Why is there an 8-page limit?</summary>
+                    <p class="faq-a">We process each page individually through an LLM for maximum extraction quality. The 8-page limit keeps the app fast and free while ensuring high-quality output.</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Is my data stored on the server?</summary>
+                    <p class="faq-a">No. Your uploaded PDF is deleted the moment processing completes. The generated ZIP is deleted immediately after you download it. Nothing is stored permanently.</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">What's inside the output ZIP?</summary>
+                    <p class="faq-a">You get a <code>knowledge/</code> folder with Markdown files for each unit, a <code>metadata/</code> folder with JSON files containing structured metadata and relationships, and a <code>manifest.json</code> summarizing the entire knowledge base.</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Why only 5 documents per day?</summary>
+                    <p class="faq-a">To keep the service free and available for everyone, we limit the entire application to 5 document generations per day. The counter resets at midnight.</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">What LLM powers this?</summary>
+                    <p class="faq-a">We use Groq's ultra-fast inference API to run open-source LLMs. The specific model can be configured by the administrator.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── CTA ───────────────────────────────────────────────────────── -->
+    <section class="cta-section">
+        <div class="cta-inner">
+            <h2 class="cta-title">Ready to structure your knowledge?</h2>
+            <p class="cta-subtitle">Upload a PDF and get a RAG-ready knowledge base in under a minute. No signup needed.</p>
+            <a href="/app" class="btn btn-primary btn-lg">Get Started — It's Free <span class="arrow">→</span></a>
+        </div>
+    </section>
+
+    <!-- ─── FOOTER ────────────────────────────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <span class="nav-logo-icon">⚡</span>
+                <span class="footer-brand">RAG <span class="accent">KB</span> Generator</span>
+            </div>
+            <div class="footer-right">
+                <span class="footer-note">Built with FastAPI, Groq & PyMuPDF</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ─── Smooth scroll ──────────────────────────────────────────
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // ─── Active nav link on scroll ──────────────────────────────
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => {
+                if (window.scrollY >= s.offsetTop - 120) current = s.getAttribute('id');
+            });
+            navLinks.forEach(l => {
+                l.classList.remove('active');
+                if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+            });
+        });
+
+        // ─── Mobile hamburger ───────────────────────────────────────
+        const hamburger = document.getElementById('nav-hamburger');
+        const navLinksEl = document.getElementById('nav-links');
+        hamburger.addEventListener('click', () => {
+            navLinksEl.classList.toggle('open');
+            hamburger.classList.toggle('open');
+        });
+
+        // ─── Intersection observer for fade-in ──────────────────────
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.pain-card, .feature-card, .code-block, .faq-item').forEach(el => {
+            el.classList.add('fade-in');
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

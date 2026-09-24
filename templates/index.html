@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upload a PDF and generate a structured, metadata-rich knowledge base for RAG pipelines.">
+    <title>RAG KB Generator — Upload</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Subtle grid pattern -->
+    <div class="page-bg"></div>
+
+    <!-- ─── NAVBAR ──────────────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-icon">⚡</span>
+                <span class="nav-logo-text">RAG <span class="accent">KB</span> Generator</span>
+            </a>
+            <div class="nav-right">
+                <div class="quota-badge" id="quota-badge" title="Global application limit — 5 documents per day">
+                    <span class="quota-icon">📊</span>
+                    <span id="quota-text">Checking quota…</span>
+                </div>
+                <a href="/" class="nav-back">← Back to Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ─── MAIN ─────────────────────────────────────────────────────────── -->
+    <main class="main">
+
+        <!-- Page header -->
+        <div class="page-header">
+            <span class="page-eyebrow">Knowledge Base Generator</span>
+            <h1 class="page-title">Upload your PDF</h1>
+            <p class="page-subtitle">Upload a document (max 8 pages) and we'll extract a structured, metadata-rich knowledge base — ready for your RAG pipeline.</p>
+        </div>
+
+        <!-- ─── Upload card ──────────────────────────────────────────────── -->
+        <div class="card upload-card" id="upload-card">
+            <form id="upload-form" enctype="multipart/form-data">
+
+                <!-- Drop zone -->
+                <div class="drop-zone" id="drop-zone">
+                    <div class="drop-icon-wrap">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <p class="drop-title">Drop your PDF here</p>
+                    <p class="drop-sub">or <span class="drop-link">click to browse</span></p>
+                    <input type="file" id="pdf-file" name="file" accept="application/pdf" required>
+                </div>
+
+                <!-- Chosen file pill -->
+                <div class="file-chosen hidden" id="file-chosen">
+                    <div class="file-pill">
+                        <span class="file-pill-icon">📄</span>
+                        <span id="chosen-name" class="file-pill-name"></span>
+                        <button type="button" id="clear-file" class="clear-btn" title="Remove file">✕</button>
+                    </div>
+                </div>
+
+                <!-- Constraints hint -->
+                <div class="constraints">
+                    <span class="constraint-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        PDF only
+                    </span>
+                    <span class="constraint-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        Max 8 pages
+                    </span>
+                    <span class="constraint-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                        Zero data retention
+                    </span>
+                </div>
+
+                <button type="submit" id="generate-btn" class="btn btn-primary" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    Generate Knowledge Base
+                </button>
+            </form>
+
+            <!-- Inline error -->
+            <div class="inline-error hidden" id="inline-error">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="inline-error-text"></span>
+            </div>
+        </div>
+
+        <!-- ─── Job card (hidden until submit) ──────────────────────────── -->
+        <div class="card job-card hidden" id="job-card">
+
+            <!-- Status row -->
+            <div class="job-header">
+                <div class="status-badge" id="status-badge" data-state="pending">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-label">Queued…</span>
+                </div>
+                <span class="job-id-label" id="job-meta"></span>
+            </div>
+
+            <!-- Terminal log -->
+            <div class="terminal" id="log-terminal">
+                <div class="terminal-bar">
+                    <div class="terminal-dots">
+                        <span class="tdot tdot-r"></span>
+                        <span class="tdot tdot-y"></span>
+                        <span class="tdot tdot-g"></span>
+                    </div>
+                    <span class="terminal-title">Live Output</span>
+                </div>
+                <div class="terminal-body" id="log-body">
+                    <div class="log-placeholder">Waiting for output…</div>
+                </div>
+            </div>
+
+            <!-- Download area -->
+            <div class="download-area hidden" id="download-area">
+                <div class="success-block">
+                    <div class="success-icon-wrap">🎉</div>
+                    <div class="success-text">
+                        <strong>Knowledge base ready!</strong>
+                        <p id="units-count" class="units-count"></p>
+                    </div>
+                </div>
+                <a id="download-btn" href="#" class="btn btn-download">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download ZIP
+                </a>
+            </div>
+
+            <!-- Error area -->
+            <div class="error-block hidden" id="error-area">
+                <div class="error-icon-wrap">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <p id="error-msg" class="error-msg"></p>
+            </div>
+
+            <!-- New job -->
+            <button class="btn btn-outline hidden" id="new-job-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.83"/></svg>
+                Start a new job
+            </button>
+        </div>
+
+    </main>
+
+    <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <span class="footer-brand">⚡ RAG <span class="accent">KB</span> Generator</span>
+            <span class="footer-note">Built with FastAPI · Groq · PyMuPDF</span>
+        </div>
+    </footer>
+
+    <script>
+        // ─── DOM refs ────────────────────────────────────────────────────
+        const uploadCard   = document.getElementById('upload-card');
+        const jobCard      = document.getElementById('job-card');
+        const form         = document.getElementById('upload-form');
+        const dropZone     = document.getElementById('drop-zone');
+        const fileInput    = document.getElementById('pdf-file');
+        const fileChosen   = document.getElementById('file-chosen');
+        const chosenName   = document.getElementById('chosen-name');
+        const clearFileBtn = document.getElementById('clear-file');
+        const generateBtn  = document.getElementById('generate-btn');
+        const inlineError  = document.getElementById('inline-error');
+        const inlineErrorText = document.getElementById('inline-error-text');
+
+        const statusBadge  = document.getElementById('status-badge');
+        const statusDot    = document.getElementById('status-dot');
+        const statusLabel  = document.getElementById('status-label');
+        const jobMeta      = document.getElementById('job-meta');
+        const logBody      = document.getElementById('log-body');
+        const downloadArea = document.getElementById('download-area');
+        const downloadBtn  = document.getElementById('download-btn');
+        const unitsCount   = document.getElementById('units-count');
+        const errorArea    = document.getElementById('error-area');
+        const errorMsg     = document.getElementById('error-msg');
+        const newJobBtn    = document.getElementById('new-job-btn');
+
+        let pollInterval = null;
+        let seenLogs = 0;
+
+        // ─── File selection ──────────────────────────────────────────────
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault(); dropZone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') setFile(file);
+        });
+        fileInput.addEventListener('change', e => { if (e.target.files[0]) setFile(e.target.files[0]); });
+        clearFileBtn.addEventListener('click', clearFile);
+
+        function setFile(file) {
+            chosenName.textContent = file.name;
+            dropZone.classList.add('hidden');
+            fileChosen.classList.remove('hidden');
+            generateBtn.disabled = false;
+            inlineError.classList.add('hidden');
+        }
+        function clearFile() {
+            fileInput.value = '';
+            fileChosen.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            generateBtn.disabled = true;
+        }
+
+        // ─── Form submit ─────────────────────────────────────────────────
+        form.addEventListener('submit', async e => {
+            e.preventDefault();
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = `<svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-18 0"/></svg> Submitting…`;
+
+            const formData = new FormData(form);
+            let jobId;
+            try {
+                const res = await fetch('/generate', { method: 'POST', body: formData });
+                if (!res.ok) { const err = await res.json(); throw new Error(err.detail || 'Upload failed.'); }
+                jobId = (await res.json()).job_id;
+            } catch (err) {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Generate Knowledge Base`;
+                showInlineError(err.message);
+                return;
+            }
+
+            uploadCard.classList.add('hidden');
+            jobCard.classList.remove('hidden');
+            jobMeta.textContent = `Job: ${jobId.slice(0, 8)}…`;
+            resetJobUI();
+            startPolling(jobId);
+        });
+
+        // ─── Polling ──────────────────────────────────────────────────────
+        function startPolling(jobId) {
+            seenLogs = 0;
+            pollStatus(jobId);
+            pollInterval = setInterval(() => pollStatus(jobId), 2000);
+        }
+
+        async function pollStatus(jobId) {
+            try {
+                const data = await (await fetch(`/status/${jobId}`)).json();
+                appendNewLogs(data.logs || []);
+                switch (data.status) {
+                    case 'pending':     setStatus('pending', '🕐 Queued…'); break;
+                    case 'processing':  setStatus('processing', '⚙️ Processing…'); break;
+                    case 'done':
+                        clearInterval(pollInterval);
+                        statusDot.classList.remove('pulsing');
+                        setStatus('done', '✅ Complete');
+                        unitsCount.textContent = `Extracted ${data.num_units} knowledge unit(s).`;
+                        downloadBtn.href = `/download/${jobId}`;
+                        downloadArea.classList.remove('hidden');
+                        newJobBtn.classList.remove('hidden');
+                        updateQuota();
+                        break;
+                    case 'failed':
+                        clearInterval(pollInterval);
+                        statusDot.classList.remove('pulsing');
+                        setStatus('failed', '❌ Failed');
+                        errorMsg.textContent = data.error || 'Unknown error.';
+                        errorArea.classList.remove('hidden');
+                        newJobBtn.classList.remove('hidden');
+                        break;
+                }
+            } catch (_) {
+                clearInterval(pollInterval);
+                setStatus('failed', '❌ Connection lost');
+                errorMsg.textContent = 'Could not reach the server.';
+                errorArea.classList.remove('hidden');
+                newJobBtn.classList.remove('hidden');
+            }
+        }
+
+        // ─── Logs ─────────────────────────────────────────────────────────
+        function appendNewLogs(logs) {
+            const newEntries = logs.slice(seenLogs);
+            if (!newEntries.length) return;
+            const placeholder = logBody.querySelector('.log-placeholder');
+            if (placeholder) placeholder.remove();
+            newEntries.forEach(line => {
+                const el = document.createElement('div');
+                el.className = 'log-line';
+                if (line.includes('❌'))       el.classList.add('log-error');
+                else if (line.includes('✅') || line.includes('🎉')) el.classList.add('log-success');
+                else if (line.includes('⚠️')) el.classList.add('log-warn');
+                el.textContent = line;
+                logBody.appendChild(el);
+            });
+            seenLogs = logs.length;
+            logBody.scrollTop = logBody.scrollHeight;
+        }
+
+        // ─── Helpers ──────────────────────────────────────────────────────
+        function setStatus(state, label) {
+            statusLabel.textContent = label;
+            statusBadge.dataset.state = state;
+        }
+        function showInlineError(msg) {
+            inlineErrorText.textContent = msg;
+            inlineError.classList.remove('hidden');
+        }
+        function resetJobUI() {
+            downloadArea.classList.add('hidden');
+            errorArea.classList.add('hidden');
+            newJobBtn.classList.add('hidden');
+            logBody.innerHTML = '<div class="log-placeholder">Waiting for output…</div>';
+            statusDot.classList.add('pulsing');
+            seenLogs = 0;
+            setStatus('pending', '🕐 Queued…');
+        }
+
+        newJobBtn.addEventListener('click', () => {
+            jobCard.classList.add('hidden');
+            uploadCard.classList.remove('hidden');
+            clearFile();
+            generateBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Generate Knowledge Base`;
+            inlineError.classList.add('hidden');
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        });
+
+        // ─── Quota badge ──────────────────────────────────────────────────
+        async function updateQuota() {
+            try {
+                const data = await (await fetch('/api-limits')).json();
+                const badge = document.getElementById('quota-text');
+                if (data.remaining <= 0) {
+                    badge.textContent = 'Daily limit reached (5/5)';
+                    badge.style.color = 'var(--error)';
+                    fileInput.disabled = true;
+                    dropZone.style.opacity = '0.5';
+                    dropZone.style.pointerEvents = 'none';
+                    document.querySelector('.drop-title').textContent = 'Come back tomorrow';
+                    document.querySelector('.drop-sub').textContent = 'Daily limit of 5 documents reached.';
+                } else {
+                    badge.textContent = `${data.remaining} of ${data.daily_limit} docs remaining today`;
+                    badge.style.color = '';
+                }
+            } catch (_) {}
+        }
+        updateQuota();
+        setInterval(updateQuota, 10000);
+    </script>
+</body>
+</html>
