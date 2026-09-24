@@ -1,4 +1,4 @@
-import fitz  # PyMuPDF
+import pymupdf as fitz
 from typing import List, Callable, Optional
 from app.schemas import KnowledgeUnit
 from app.llm import extract_knowledge_units

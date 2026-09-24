@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime, date
 from typing import Dict
 
-import fitz  # PyMuPDF
+import pymupdf as fitz
 import asyncio
 from fastapi import APIRouter, BackgroundTasks, Request, UploadFile, File, HTTPException
 from fastapi.templating import Jinja2Templates
