@@ -60,7 +60,3 @@ Then, open your web browser and navigate to: `http://127.0.0.1:8000/`
 - `app/schemas.py`: Pydantic models for type safety across the application.
 - `templates/`: HTML views for the frontend UI.
 - `static/`: Custom CSS and frontend assets.
-
-## License
-
-MIT License.
